@@ -1,7 +1,7 @@
 {
   "name": "FLAMES Matchmaker",
   "short_name": "FLAMES",
-  "start_url": "./flames.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ff758c",
   "theme_color": "#ff4d6d",
