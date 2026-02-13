@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#ff4d6d">
+<title>FLAMES Matchmaking</title>
+
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  margin:0;
+  background: linear-gradient(135deg,#ff6a88,#ff99ac,#ffdde1);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+}
+
+.container {
+  background: rgba(255,255,255,0.15);
+  backdrop-filter: blur(20px);
+  padding:25px;
+  border-radius:25px;
+  width:95%;
+  max-width:950px;
+  box-shadow:0 15px 40px rgba(0,0,0,0.2);
+  animation: fadeIn 0.6s ease;
+}
+
+h2 {
+  text-align:center;
+  font-size:30px;
+  color:white;
+}
+
+.columns {
+  display:flex;
+  gap:20px;
+  flex-wrap:wrap;
+}
+
+.card {
+  flex:1;
+  min-width:260px;
+  background: rgba(255,255,255,0.3);
+  backdrop-filter: blur(10px);
+  padding:15px;
+  border-radius:20px;
+  transition:0.3s;
+}
+
+.card:hover {
+  transform: translateY(-5px) scale(1.02);
+}
+
+input {
+  width:100%;
+  padding:10px;
+  margin:6px 0;
+  border-radius:12px;
+  border:none;
+}
+
+.zodiacDisplay {
+  font-weight:bold;
+  color:#fff;
+  margin-bottom:10px;
+}
+
+.button-row {
+  display:flex;
+  gap:10px;
+}
+
+button {
+  background: linear-gradient(45deg,#ff4d6d,#ff758c);
+  color:white;
+  padding:12px;
+  border:none;
+  border-radius:12px;
+  width:100%;
+  font-size:16px;
+  cursor:pointer;
+  margin-top:15px;
+  transition:0.3s;
+}
+
+button:hover {
+  transform: scale(1.05);
+}
+
+.reset-btn {
+  background: linear-gradient(45deg,#6c757d,#adb5bd);
+}
+
+.result {
+  margin-top:20px;
+  font-size:22px;
+  font-weight:bold;
+  text-align:center;
+  color:white;
+  animation: pop 0.4s ease;
+}
+
+.roast {
+  margin-top:10px;
+  font-style:italic;
+  color:#fff;
+  text-align:center;
+}
+
+.progress {
+  height:22px;
+  background:rgba(255,255,255,0.3);
+  border-radius:20px;
+  overflow:hidden;
+  margin-top:15px;
+}
+
+.progress-bar {
+  height:100%;
+  background: linear-gradient(90deg,#ff4d6d,#ff99ac);
+  width:0%;
+  text-align:center;
+  color:white;
+  font-size:12px;
+  line-height:22px;
+  transition:0.5s;
+}
+
+img {
+  width:100%;
+  border-radius:12px;
+  margin-top:5px;
+}
+
+@keyframes fadeIn {
+  from{opacity:0; transform:scale(0.9)}
+  to{opacity:1; transform:scale(1)}
+}
+
+@keyframes pop {
+  from{transform:scale(0.8); opacity:0}
+  to{transform:scale(1); opacity:1}
+}
+
+</style>
+</head>
+
+<body>
+<div class="container">
+<h2>💘FLAMES💘</h2>
+
+<div class="columns">
+
+<div class="card">
+<h3>😎 You</h3>
+<input id="name1" placeholder="Your Name">
+<input type="date" id="dob1" onchange="setZodiac('dob1','zodiac1')">
+<div class="zodiacDisplay" id="zodiac1">Zodiac: --</div>
+<input type="file" accept="image/*" capture="environment" onchange="previewImage(event,'img1')">
+<img id="img1" />
+</div>
+
+<div class="card">
+<h3>💀 Your Crush</h3>
+<input id="name2" placeholder="Partner Name">
+<input type="date" id="dob2" onchange="setZodiac('dob2','zodiac2')">
+<div class="zodiacDisplay" id="zodiac2">Zodiac: --</div>
+<input type="file" accept="image/*" capture="environment" onchange="previewImage(event,'img2')">
+<img id="img2" />
+</div>
+
+</div>
+
+<div class="button-row">
+<button onclick="calculateFlames()">💘 Check Destiny</button>
+<button class="reset-btn" onclick="resetApp()">🔄 New Victim</button>
+</div>
+
+<div class="result" id="result"></div>
+<div class="progress"><div class="progress-bar" id="progressBar"></div></div>
+<div class="roast" id="roast"></div>
+
+</div>
+
+<script>
+function getZodiacFromDOB(dateString){
+ let dob=new Date(dateString);
+ let m=dob.getMonth()+1;
+ let d=dob.getDate();
+ if((m==3&&d>=21)||(m==4&&d<=19)) return "Aries";
+ if((m==4&&d>=20)||(m==5&&d<=20)) return "Taurus";
+ if((m==5&&d>=21)||(m==6&&d<=20)) return "Gemini";
+ if((m==6&&d>=21)||(m==7&&d<=22)) return "Cancer";
+ if((m==7&&d>=23)||(m==8&&d<=22)) return "Leo";
+ if((m==8&&d>=23)||(m==9&&d<=22)) return "Virgo";
+ if((m==9&&d>=23)||(m==10&&d<=22)) return "Libra";
+ if((m==10&&d>=23)||(m==11&&d<=21)) return "Scorpio";
+ if((m==11&&d>=22)||(m==12&&d<=21)) return "Sagittarius";
+ if((m==12&&d>=22)||(m==1&&d<=19)) return "Capricorn";
+ if((m==1&&d>=20)||(m==2&&d<=18)) return "Aquarius";
+ return "Pisces";
+}
+
+function setZodiac(dobId,displayId){
+ let dob=document.getElementById(dobId).value;
+ if(!dob) return;
+ let sign=getZodiacFromDOB(dob);
+ document.getElementById(displayId).innerText = "Zodiac: " + sign;
+}
+
+function previewImage(event,id){
+ let reader=new FileReader();
+ reader.onload=function(){
+ document.getElementById(id).src=reader.result;
+ }
+ reader.readAsDataURL(event.target.files[0]);
+}
+
+function zodiacMatch(z1,z2){
+ const goodMatches={
+  "Leo":["Aries","Sagittarius"],
+  "Virgo":["Taurus","Capricorn"],
+  "Aries":["Leo","Sagittarius"],
+  "Taurus":["Virgo","Capricorn"],
+ };
+ return goodMatches[z1]?.includes(z2);
+}
+
+function calculateFlames() {
+ let n1=name1.value.trim().toLowerCase();
+ let n2=name2.value.trim().toLowerCase();
+ let z1=getZodiacFromDOB(dob1.value);
+ let z2=getZodiacFromDOB(dob2.value);
+ if(!n1 || !n2) return alert("Enter both names!");
+
+ let flames=['Friends','Love','Affection','Marriage','Enemies','Siblings'];
+ let count=Math.abs(n1.length - n2.length);
+ let result=flames[count % flames.length];
+
+ let zodiacCompatible=zodiacMatch(z1,z2);
+ let score = Math.floor(Math.random()*40)+30;
+ if(zodiacCompatible) score += 30;
+ if(result === 'Marriage' || result === 'Love') score += 20;
+ if(result === 'Enemies') score -= 20;
+ score = Math.max(5, Math.min(score, 100));
+
+ document.getElementById('result').innerText=`🔥 ${result} | ${z1} + ${z2} | ${score}%`;
+ document.getElementById('progressBar').style.width = score + "%";
+ document.getElementById('progressBar').innerText = score + "%";
+
+ let roast = score > 75
+  ? "This is giving main character energy 😭"
+  : score > 50
+  ? "Situationship loading… 😌"
+  : score > 25
+  ? "This needs prayer and WiFi 🙏"
+  : "Even OTPs expire slower than this 😭";
+
+ document.getElementById('roast').innerText=roast;
+}
+
+function resetApp(){
+ name1.value="";
+ name2.value="";
+ dob1.value="";
+ dob2.value="";
+ zodiac1.innerText="Zodiac: --";
+ zodiac2.innerText="Zodiac: --";
+ img1.src="";
+ img2.src="";
+ document.querySelectorAll('input[type="file"]').forEach(f => f.value = "");
+ result.innerText="";
+ roast.innerText="";
+ progressBar.style.width="0%";
+ progressBar.innerText="";
+}
+
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  navigator.serviceWorker.register('sw.js')
+  .then(() => console.log("PWA Ready"))
+  .catch(() => console.log("PWA skipped"));
+}
+
+</script>
+</body>
+</html>
