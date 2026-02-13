@@ -3,288 +3,221 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#ff4d6d">
-<title>FLAMES Matchmaking</title>
-
+<title>FLAMES Matchmaker 💅</title>
 <style>
 body {
-  font-family: 'Segoe UI', sans-serif;
+  font-family: 'Poppins', sans-serif;
   margin:0;
-  background: linear-gradient(135deg,#ff6a88,#ff99ac,#ffdde1);
+  background: linear-gradient(135deg,#ff5edf,#04c8de);
   display:flex;
   justify-content:center;
   align-items:center;
   min-height:100vh;
 }
-
 .container {
   background: rgba(255,255,255,0.15);
   backdrop-filter: blur(20px);
   padding:25px;
-  border-radius:25px;
+  border-radius:30px;
   width:95%;
-  max-width:950px;
-  box-shadow:0 15px 40px rgba(0,0,0,0.2);
-  animation: fadeIn 0.6s ease;
+  max-width:900px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.3);
 }
-
-h2 {
-  text-align:center;
-  font-size:30px;
-  color:white;
-}
-
-.columns {
-  display:flex;
-  gap:20px;
-  flex-wrap:wrap;
-}
-
+h2 { text-align:center; color:white; font-size:32px; }
+.columns { display:flex; gap:20px; flex-wrap:wrap; }
 .card {
   flex:1;
-  min-width:260px;
-  background: rgba(255,255,255,0.3);
-  backdrop-filter: blur(10px);
+  min-width:250px;
+  background: rgba(255,255,255,0.25);
   padding:15px;
   border-radius:20px;
-  transition:0.3s;
 }
-
-.card:hover {
-  transform: translateY(-5px) scale(1.02);
-}
-
-input {
+input, select {
   width:100%;
-  padding:10px;
-  margin:6px 0;
-  border-radius:12px;
-  border:none;
-}
-
-.zodiacDisplay {
-  font-weight:bold;
-  color:#fff;
-  margin-bottom:10px;
-}
-
-.button-row {
-  display:flex;
-  gap:10px;
-}
-
-button {
-  background: linear-gradient(45deg,#ff4d6d,#ff758c);
-  color:white;
   padding:12px;
+  margin:6px 0;
+  border-radius:15px;
   border:none;
-  border-radius:12px;
+}
+.zodiac { color:white; font-size:14px; }
+.button-row { display:flex; gap:10px; }
+button {
+  background: linear-gradient(45deg,#ff0080,#7928ca);
+  color:white;
+  padding:14px;
+  border:none;
+  border-radius:15px;
   width:100%;
   font-size:16px;
   cursor:pointer;
   margin-top:15px;
-  transition:0.3s;
 }
-
-button:hover {
-  transform: scale(1.05);
-}
-
-.reset-btn {
-  background: linear-gradient(45deg,#6c757d,#adb5bd);
-}
-
-.result {
-  margin-top:20px;
-  font-size:22px;
-  font-weight:bold;
+.reset-btn { background: linear-gradient(45deg,#6c757d,#adb5bd); }
+.spinner {
   text-align:center;
-  color:white;
-  animation: pop 0.4s ease;
+  font-size:30px;
+  animation: spin 1s linear infinite;
+  display:none;
 }
-
-.roast {
-  margin-top:10px;
-  font-style:italic;
-  color:#fff;
-  text-align:center;
-}
-
-.progress {
-  height:22px;
-  background:rgba(255,255,255,0.3);
-  border-radius:20px;
-  overflow:hidden;
+@keyframes spin { from { transform: rotate(0deg);} to { transform: rotate(360deg);} }
+.chatbox {
   margin-top:15px;
+  background: rgba(255,255,255,0.3);
+  padding:15px;
+  border-radius:15px;
+  display:none;
 }
-
-.progress-bar {
-  height:100%;
-  background: linear-gradient(90deg,#ff4d6d,#ff99ac);
-  width:0%;
-  text-align:center;
-  color:white;
-  font-size:12px;
-  line-height:22px;
-  transition:0.5s;
-}
-
-img {
-  width:100%;
-  border-radius:12px;
-  margin-top:5px;
-}
-
-@keyframes fadeIn {
-  from{opacity:0; transform:scale(0.9)}
-  to{opacity:1; transform:scale(1)}
-}
-
-@keyframes pop {
-  from{transform:scale(0.8); opacity:0}
-  to{transform:scale(1); opacity:1}
-}
-
+.msg { margin:8px 0; padding:10px; border-radius:10px; background:white; }
+.progress { height:25px; background:rgba(255,255,255,0.3); border-radius:15px; overflow:hidden; margin-top:10px; }
+.progress-bar { height:100%; background: linear-gradient(90deg,#ff0080,#ff8c00); width:0%; text-align:center; color:white; font-weight:bold; }
+img { width:100%; border-radius:15px; margin-top:5px; }
 </style>
 </head>
-
 <body>
 <div class="container">
-<h2>💘FLAMES💘</h2>
-
+<h2>🔥 FLAMES but make it chaotic 💘</h2>
 <div class="columns">
 
 <div class="card">
 <h3>😎 You</h3>
-<input id="name1" placeholder="Your Name">
-<input type="date" id="dob1" onchange="setZodiac('dob1','zodiac1')">
-<div class="zodiacDisplay" id="zodiac1">Zodiac: --</div>
-<input type="file" accept="image/*" capture="environment" onchange="previewImage(event,'img1')">
+<input id="name1" placeholder="Main Character Name">
+<input type="date" id="dob1" onchange="showZodiac('dob1','z1')">
+<div class="zodiac" id="z1">Zodiac: --</div>
+<select id="personality1">
+<option value="chill">Chill 😌</option>
+<option value="dramatic">Drama Core 🎭</option>
+<option value="introvert">Lowkey 👀</option>
+<option value="extrovert">Loud & Proud 🔊</option>
+</select>
+<input type="file" accept="image/*" onchange="previewImage(event,'img1')">
 <img id="img1" />
 </div>
 
 <div class="card">
-<h3>💀 Your Crush</h3>
-<input id="name2" placeholder="Partner Name">
-<input type="date" id="dob2" onchange="setZodiac('dob2','zodiac2')">
-<div class="zodiacDisplay" id="zodiac2">Zodiac: --</div>
-<input type="file" accept="image/*" capture="environment" onchange="previewImage(event,'img2')">
+<h3>💀 The Other Person</h3>
+<input id="name2" placeholder="Potential Red Flag">
+<input type="date" id="dob2" onchange="showZodiac('dob2','z2')">
+<div class="zodiac" id="z2">Zodiac: --</div>
+<select id="personality2">
+<option value="chill">Chill 😌</option>
+<option value="dramatic">Drama Core 🎭</option>
+<option value="introvert">Lowkey 👀</option>
+<option value="extrovert">Loud & Proud 🔊</option>
+</select>
+<input type="file" accept="image/*" onchange="previewImage(event,'img2')">
 <img id="img2" />
 </div>
 
 </div>
-
 <div class="button-row">
-<button onclick="calculateFlames()">💘 Check Destiny</button>
-<button class="reset-btn" onclick="resetApp()">🔄 New Victim</button>
+<button onclick="startReveal()">✨ Spill the Tea</button>
+<button class="reset-btn" onclick="resetApp()">🧹 Clean Slate</button>
 </div>
 
-<div class="result" id="result"></div>
+<div class="spinner" id="spinner">💘</div>
+<div class="chatbox" id="chatbox"></div>
 <div class="progress"><div class="progress-bar" id="progressBar"></div></div>
-<div class="roast" id="roast"></div>
-
 </div>
 
 <script>
-function getZodiacFromDOB(dateString){
- let dob=new Date(dateString);
- let m=dob.getMonth()+1;
- let d=dob.getDate();
- if((m==3&&d>=21)||(m==4&&d<=19)) return "Aries";
- if((m==4&&d>=20)||(m==5&&d<=20)) return "Taurus";
- if((m==5&&d>=21)||(m==6&&d<=20)) return "Gemini";
- if((m==6&&d>=21)||(m==7&&d<=22)) return "Cancer";
- if((m==7&&d>=23)||(m==8&&d<=22)) return "Leo";
- if((m==8&&d>=23)||(m==9&&d<=22)) return "Virgo";
- if((m==9&&d>=23)||(m==10&&d<=22)) return "Libra";
- if((m==10&&d>=23)||(m==11&&d<=21)) return "Scorpio";
- if((m==11&&d>=22)||(m==12&&d<=21)) return "Sagittarius";
- if((m==12&&d>=22)||(m==1&&d<=19)) return "Capricorn";
- if((m==1&&d>=20)||(m==2&&d<=18)) return "Aquarius";
- return "Pisces";
-}
-
-function setZodiac(dobId,displayId){
- let dob=document.getElementById(dobId).value;
- if(!dob) return;
- let sign=getZodiacFromDOB(dob);
- document.getElementById(displayId).innerText = "Zodiac: " + sign;
-}
-
 function previewImage(event,id){
  let reader=new FileReader();
- reader.onload=function(){
- document.getElementById(id).src=reader.result;
- }
+ reader.onload=function(){ document.getElementById(id).src=reader.result; }
  reader.readAsDataURL(event.target.files[0]);
 }
 
-function zodiacMatch(z1,z2){
- const goodMatches={
-  "Leo":["Aries","Sagittarius"],
-  "Virgo":["Taurus","Capricorn"],
-  "Aries":["Leo","Sagittarius"],
-  "Taurus":["Virgo","Capricorn"],
- };
- return goodMatches[z1]?.includes(z2);
+function getZodiac(dateString){
+ let d=new Date(dateString);
+ let day=d.getDate(), m=d.getMonth()+1;
+ if((m==3&&day>=21)||(m==4&&day<=19)) return 'Aries';
+ if((m==4&&day>=20)||(m==5&&day<=20)) return 'Taurus';
+ if((m==5&&day>=21)||(m==6&&day<=20)) return 'Gemini';
+ if((m==6&&day>=21)||(m==7&&day<=22)) return 'Cancer';
+ if((m==7&&day>=23)||(m==8&&day<=22)) return 'Leo';
+ if((m==8&&day>=23)||(m==9&&day<=22)) return 'Virgo';
+ if((m==9&&day>=23)||(m==10&&day<=22)) return 'Libra';
+ if((m==10&&day>=23)||(m==11&&day<=21)) return 'Scorpio';
+ if((m==11&&day>=22)||(m==12&&day<=21)) return 'Sagittarius';
+ if((m==12&&day>=22)||(m==1&&day<=19)) return 'Capricorn';
+ if((m==1&&day>=20)||(m==2&&day<=18)) return 'Aquarius';
+ return 'Pisces';
 }
 
-function calculateFlames() {
- let n1=name1.value.trim().toLowerCase();
- let n2=name2.value.trim().toLowerCase();
- let z1=getZodiacFromDOB(dob1.value);
- let z2=getZodiacFromDOB(dob2.value);
- if(!n1 || !n2) return alert("Enter both names!");
+function showZodiac(dobId, displayId){
+ let dob=document.getElementById(dobId).value;
+ if(!dob) return;
+ document.getElementById(displayId).innerText="Zodiac: "+getZodiac(dob);
+}
 
- let flames=['Friends','Love','Affection','Marriage','Enemies','Siblings'];
- let count=Math.abs(n1.length - n2.length);
- let result=flames[count % flames.length];
+function zodiacScore(z1,z2){
+ const compatiblePairs=[['Leo','Virgo'],['Aries','Sagittarius'],['Taurus','Cancer'],['Gemini','Libra'],['Scorpio','Pisces']];
+ for(let pair of compatiblePairs){
+ if((pair[0]==z1&&pair[1]==z2)||(pair[1]==z1&&pair[0]==z2)) return 20;
+ }
+ return 5;
+}
 
- let zodiacCompatible=zodiacMatch(z1,z2);
- let score = Math.floor(Math.random()*40)+30;
- if(zodiacCompatible) score += 30;
- if(result === 'Marriage' || result === 'Love') score += 20;
- if(result === 'Enemies') score -= 20;
- score = Math.max(5, Math.min(score, 100));
+function dobDifferenceScore(d1,d2){
+ let ageGap=Math.abs(new Date(d1)-new Date(d2))/(1000*60*60*24*365);
+ if(ageGap<2) return 30;
+ if(ageGap<5) return 20;
+ if(ageGap<8) return 10;
+ return 0;
+}
 
- document.getElementById('result').innerText=`🔥 ${result} | ${z1} + ${z2} | ${score}%`;
- document.getElementById('progressBar').style.width = score + "%";
- document.getElementById('progressBar').innerText = score + "%";
+function personalityScore(p1,p2){
+ if(p1===p2) return 25;
+ if((p1==='introvert'&&p2==='extrovert')||(p1==='extrovert'&&p2==='introvert')) return 20;
+ if(p1==='dramatic'&&p2==='dramatic') return -15;
+ return 10;
+}
 
- let roast = score > 75
-  ? "This is giving main character energy 😭"
-  : score > 50
-  ? "Situationship loading… 😌"
-  : score > 25
-  ? "This needs prayer and WiFi 🙏"
-  : "Even OTPs expire slower than this 😭";
+function photoVibeScore(img){ if(!img.src) return 5; return (img.src.length%25); }
 
- document.getElementById('roast').innerText=roast;
+function startReveal(){ spinner.style.display="block"; chatbox.style.display="none"; setTimeout(calculateCompatibility,2000); }
+
+function calculateCompatibility(){
+ spinner.style.display="none";
+ let d1=dob1.value, d2=dob2.value;
+ let p1=personality1.value, p2=personality2.value;
+ if(!d1||!d2) return alert("Drop the DOB bestie 😭");
+
+ let z1=getZodiac(d1);
+ let z2=getZodiac(d2);
+
+ let score=40;
+ score+=dobDifferenceScore(d1,d2);
+ score+=personalityScore(p1,p2);
+ score+=photoVibeScore(img1);
+ score+=photoVibeScore(img2);
+ score+=zodiacScore(z1,z2);
+
+ score=Math.max(5,Math.min(score,100));
+ let situationship=Math.max(10,100-score);
+
+ progressBar.style.width=score+"%";
+ progressBar.innerText=score+"%";
+
+ chatbox.style.display="block";
+ chatbox.innerHTML=`
+ <div class='msg'>✨ ${z1} + ${z2} energy</div>
+ <div class='msg'>💘 Match Score: ${score}%</div>
+ <div class='msg'>🚩 Situationship Risk: ${situationship}%</div>
+ <div class='msg'>${score<40?'Bestie... run 😭':'Okay this might survive 👀'}</div>`;
 }
 
 function resetApp(){
- name1.value="";
- name2.value="";
- dob1.value="";
- dob2.value="";
- zodiac1.innerText="Zodiac: --";
- zodiac2.innerText="Zodiac: --";
- img1.src="";
- img2.src="";
- document.querySelectorAll('input[type="file"]').forEach(f => f.value = "");
- result.innerText="";
- roast.innerText="";
+ name1.value=""; name2.value="";
+ dob1.value=""; dob2.value="";
+ document.getElementById('z1').innerText="Zodiac: --";
+ document.getElementById('z2').innerText="Zodiac: --";
+ img1.src=""; img2.src="";
+ document.querySelectorAll('input[type="file"]').forEach(f=>f.value="");
  progressBar.style.width="0%";
  progressBar.innerText="";
+ chatbox.style.display="none";
+ spinner.style.display="none";
 }
-
-if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
-  navigator.serviceWorker.register('sw.js')
-  .then(() => console.log("PWA Ready"))
-  .catch(() => console.log("PWA skipped"));
-}
-
 </script>
 </body>
 </html>
