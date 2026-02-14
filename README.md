@@ -8,6 +8,9 @@ Beyond compatibility, the app also adds a playful twist by analysing personality
 
 Designed with a glassmorphism aesthetic and chaotic Gen-Z tone, the app feels less like a traditional form-based calculator and more like an interactive relationship report. Once hosted, it can be installed as a Progressive Web App, allowing users to download and run it like a mobile application directly from their home screen.
 
+🚀 Live Demo
+https://maidhily-s.github.io/flames-matchmaker-guru/
+
 ⚠️ Disclaimer
 This app is for fun only.
 Do NOT break up based on this.
