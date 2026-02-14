@@ -39,6 +39,7 @@ input, select {
   border-radius:15px;
   border:none;
 }
+small { color:white; font-size:12px; }
 .zodiac { color:white; font-size:14px; }
 .button-row { display:flex; gap:10px; }
 button {
@@ -61,11 +62,40 @@ button {
 }
 @keyframes spin { from { transform: rotate(0deg);} to { transform: rotate(360deg);} }
 .chatbox {
-  margin-top:15px;
-  background: rgba(255,255,255,0.3);
+  margin-top:20px;
+  background: rgba(0,0,0,0.35);
+  padding:20px;
+  border-radius:20px;
+  display:none;
+  animation: fadeIn 0.6s ease;
+}
+@keyframes fadeIn {
+  from { opacity:0; transform:translateY(10px); }
+  to { opacity:1; transform:translateY(0); }
+}
+.result-card {
+  background: linear-gradient(135deg,#ff9a9e,#fad0c4);
   padding:15px;
   border-radius:15px;
-  display:none;
+  margin-bottom:10px;
+  color:#333;
+  font-weight:600;
+  box-shadow:0 10px 20px rgba(0,0,0,0.2);
+}
+.roast-card {
+  background: linear-gradient(135deg,#a18cd1,#fbc2eb);
+  padding:12px;
+  border-radius:15px;
+  margin:8px 0;
+  font-size:14px;
+}
+.warning-card {
+  background: linear-gradient(135deg,#f5576c,#f093fb);
+  padding:12px;
+  border-radius:15px;
+  margin-top:10px;
+  text-align:center;
+  font-weight:bold;
 }
 .msg { margin:8px 0; padding:10px; border-radius:10px; background:white; }
 .progress { height:25px; background:rgba(255,255,255,0.3); border-radius:15px; overflow:hidden; margin-top:10px; }
@@ -81,7 +111,7 @@ img { width:100%; border-radius:15px; margin-top:5px; }
 <div class="card">
 <h3>😎 You</h3>
 <input id="name1" placeholder="Main Character Name">
-<input type="date" id="dob1" onchange="showZodiac('dob1','z1')">
+<input type="date" id="dob1" placeholder="📅 Enter Date of Birth" onchange="showZodiac('dob1','z1')">
 <div class="zodiac" id="z1">Zodiac: --</div>
 <select id="personality1">
 <option value="chill">Chill 😌</option>
@@ -89,14 +119,15 @@ img { width:100%; border-radius:15px; margin-top:5px; }
 <option value="introvert">Lowkey 👀</option>
 <option value="extrovert">Loud & Proud 🔊</option>
 </select>
-<input type="file" accept="image/*" onchange="previewImage(event,'img1')">
+<small>📸 Upload OR Take Selfie</small>
+<input type="file" accept="image/*" capture="environment" onchange="previewImage(event,'img1')">
 <img id="img1" />
 </div>
 
 <div class="card">
 <h3>💀 The Other Person</h3>
 <input id="name2" placeholder="Potential Red Flag">
-<input type="date" id="dob2" onchange="showZodiac('dob2','z2')">
+<input type="date" id="dob2" placeholder="📅 Enter Date of Birth" onchange="showZodiac('dob2','z2')">
 <div class="zodiac" id="z2">Zodiac: --</div>
 <select id="personality2">
 <option value="chill">Chill 😌</option>
@@ -104,7 +135,8 @@ img { width:100%; border-radius:15px; margin-top:5px; }
 <option value="introvert">Lowkey 👀</option>
 <option value="extrovert">Loud & Proud 🔊</option>
 </select>
-<input type="file" accept="image/*" onchange="previewImage(event,'img2')">
+<small>📸 Upload OR Take Photo</small>
+<input type="file" accept="image/*" capture="environment" onchange="previewImage(event,'img2')">
 <img id="img2" />
 </div>
 
@@ -150,11 +182,21 @@ function showZodiac(dobId, displayId){
 }
 
 function zodiacScore(z1,z2){
- const compatiblePairs=[['Leo','Virgo'],['Aries','Sagittarius'],['Taurus','Cancer'],['Gemini','Libra'],['Scorpio','Pisces']];
- for(let pair of compatiblePairs){
- if((pair[0]==z1&&pair[1]==z2)||(pair[1]==z1&&pair[0]==z2)) return 20;
- }
- return 5;
+ const matrix = {
+ Aries:{Aries:75,Taurus:60,Gemini:85,Cancer:55,Leo:85,Virgo:58,Libra:80,Scorpio:60,Sagittarius:90,Capricorn:65,Aquarius:78,Pisces:50},
+ Taurus:{Aries:60,Taurus:80,Gemini:65,Cancer:85,Leo:70,Virgo:92,Libra:75,Scorpio:88,Sagittarius:52,Capricorn:89,Aquarius:68,Pisces:90},
+ Gemini:{Aries:85,Taurus:65,Gemini:78,Cancer:60,Leo:88,Virgo:58,Libra:93,Scorpio:62,Sagittarius:86,Capricorn:70,Aquarius:90,Pisces:68},
+ Cancer:{Aries:55,Taurus:85,Gemini:60,Cancer:82,Leo:65,Virgo:88,Libra:70,Scorpio:94,Sagittarius:58,Capricorn:86,Aquarius:57,Pisces:96},
+ Leo:{Aries:85,Taurus:70,Gemini:88,Cancer:65,Leo:80,Virgo:60,Libra:89,Scorpio:60,Sagittarius:88,Capricorn:72,Aquarius:84,Pisces:68},
+ Virgo:{Aries:58,Taurus:92,Gemini:58,Cancer:88,Leo:60,Virgo:85,Libra:78,Scorpio:86,Sagittarius:65,Capricorn:95,Aquarius:72,Pisces:90},
+ Libra:{Aries:80,Taurus:75,Gemini:93,Cancer:70,Leo:89,Virgo:78,Libra:82,Scorpio:68,Sagittarius:84,Capricorn:70,Aquarius:95,Pisces:72},
+ Scorpio:{Aries:60,Taurus:88,Gemini:62,Cancer:94,Leo:60,Virgo:86,Libra:68,Scorpio:84,Sagittarius:70,Capricorn:82,Aquarius:65,Pisces:97},
+ Sagittarius:{Aries:90,Taurus:52,Gemini:86,Cancer:58,Leo:88,Virgo:65,Libra:84,Scorpio:70,Sagittarius:78,Capricorn:68,Aquarius:90,Pisces:75},
+ Capricorn:{Aries:65,Taurus:89,Gemini:70,Cancer:86,Leo:72,Virgo:95,Libra:70,Scorpio:82,Sagittarius:68,Capricorn:80,Aquarius:75,Pisces:88},
+ Aquarius:{Aries:78,Taurus:68,Gemini:90,Cancer:57,Leo:84,Virgo:72,Libra:95,Scorpio:65,Sagittarius:90,Capricorn:75,Aquarius:82,Pisces:80},
+ Pisces:{Aries:50,Taurus:90,Gemini:68,Cancer:96,Leo:68,Virgo:90,Libra:72,Scorpio:97,Sagittarius:75,Capricorn:88,Aquarius:80,Pisces:85}
+ };
+ return matrix[z1][z2] * 0.2;
 }
 
 function dobDifferenceScore(d1,d2){
@@ -175,6 +217,32 @@ function personalityScore(p1,p2){
 function photoVibeScore(img){ if(!img.src) return 5; return (img.src.length%25); }
 
 function startReveal(){ spinner.style.display="block"; chatbox.style.display="none"; setTimeout(calculateCompatibility,2000); }
+
+function roastZodiac(z){
+ const roasts={
+ Aries:"Main character syndrome detected 🚨",
+ Taurus:"Will fight for food before love 🍕",
+ Gemini:"Multiple personalities loading...",
+ Cancer:"Emotional damage expert 😭",
+ Leo:"Needs attention like oxygen ✨",
+ Virgo:"Will correct your grammar mid breakup 📚",
+ Libra:"Cannot decide between love & chaos ⚖️",
+ Scorpio:"Secret FBI energy 🕵️",
+ Sagittarius:"Commitment allergic 💨",
+ Capricorn:"Treats love like a business deal 📊",
+ Aquarius:"Emotionally buffering...",
+ Pisces:"Lives in delulu land 🌊"
+ };
+ return roasts[z];
+}
+
+function roastPhoto(img){
+ if(!img.src) return "No photo? Hiding something? 👀";
+ let vibe=img.src.length%3;
+ if(vibe===0) return "Soft aesthetic but will ghost 💀";
+ if(vibe===1) return "Gym mirror energy detected 🪞";
+ return "DP screaming 'situationship survivor' 😭";
+}
 
 function calculateCompatibility(){
  spinner.style.display="none";
@@ -200,10 +268,17 @@ function calculateCompatibility(){
 
  chatbox.style.display="block";
  chatbox.innerHTML=`
- <div class='msg'>✨ ${z1} + ${z2} energy</div>
- <div class='msg'>💘 Match Score: ${score}%</div>
- <div class='msg'>🚩 Situationship Risk: ${situationship}%</div>
- <div class='msg'>${score<40?'Bestie... run 😭':'Okay this might survive 👀'}</div>`;
+ <div class='result-card'>✨ ${z1} + ${z2} Cosmic Chaos</div>
+ <div class='result-card'>💘 Compatibility: ${score}%</div>
+ <div class='result-card'>🚩 Situationship Risk: ${situationship}%</div>
+ 
+ <div class='roast-card'>🔮 ${roastZodiac(z1)}</div>
+ <div class='roast-card'>🔮 ${roastZodiac(z2)}</div>
+ <div class='roast-card'>📸 You: ${roastPhoto(img1)}</div>
+ <div class='roast-card'>📸 Them: ${roastPhoto(img2)}</div>
+ 
+ <div class='warning-card'>${score<40?'🚨 Emotional Damage Incoming':'💅 Might Survive The Talking Stage'}</div>
+`;
 }
 
 function resetApp(){
